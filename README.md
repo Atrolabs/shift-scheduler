@@ -11,6 +11,7 @@ Modern, cloud-ready shift scheduling application.
 - Frontend docs: [frontend/README.md](frontend/README.md)
 - Backend docs: [backend/README.md](backend/README.md)
 - Infrastructure docs: [infrastructure/README.md](infrastructure/README.md)
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Monorepo Layout
 

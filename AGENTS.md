@@ -27,6 +27,7 @@ This file applies to the entire monorepo:
 - Do not commit secrets or generated local env files (`.env`, `*.tfvars`, credentials).
 - Prefer updating existing files over introducing parallel patterns.
 - If you change behavior, update the nearest README/docs in the same area.
+- For branch, commit, and ticket conventions, follow `CONTRIBUTING.md` as the single source of truth.
 
 ## Formatting And Validation
 
@@ -124,4 +125,3 @@ Apply these when relevant:
 - Do not rotate or overwrite live cloud resources unless explicitly requested.
 - Do not destroy infrastructure as part of routine edits.
 - Do not change environment defaults (`dev`/`prod`, region, naming) without explicit request.
-
