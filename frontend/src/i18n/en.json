@@ -1,0 +1,19 @@
+{
+  "welcomeBack": "Welcome back",
+  "available": "Available",
+  "thisWeek": "This Week",
+  "thisMonth": "This Month",
+  "upcoming": "Upcoming",
+  "upcomingShifts": "Upcoming Shifts",
+  "viewAll": "View All",
+  "quickAccess": "Quick Access",
+  "myShifts": "My Shifts",
+  "availability": "Availability",
+  "profile": "Profile",
+  "documents": "Documents",
+  "settings": "Settings",
+  "today": "Today",
+  "notFound": "Page Not Found",
+  "notFoundMessage": "The page you're looking for doesn't exist.",
+  "goHome": "Go Home"
+}
