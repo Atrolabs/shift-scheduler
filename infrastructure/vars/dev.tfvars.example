@@ -1,0 +1,12 @@
+# Development Environment Configuration
+#
+# Copy this file to dev.tfvars and update with your actual values
+# DO NOT commit dev.tfvars with real values
+
+aws_region   = "eu-central-1"
+environment  = "dev"
+project_name = "shift-scheduler"
+
+## Uncomment to override default, CloudFront domain
+# app_base_url = "http://localhost:3000"
+

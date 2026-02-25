@@ -1,0 +1,11 @@
+# Production Environment Backend Configuration
+#
+# Copy this file to backend-prod.tfvars and update with your actual values
+# DO NOT commit backend-prod.tfvars with real values
+
+bucket       = "your-terraform-state-bucket-prod"
+key          = "prod/terraform.tfstate"
+region       = "eu-central-1"
+encrypt      = true
+use_lockfile = true
+
