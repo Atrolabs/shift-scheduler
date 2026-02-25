@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+*.min.js
+
+# Generated files
+*.log
+*.lock
+
+# Environment files
+.env
+.env.local
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Backup
+backup/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+

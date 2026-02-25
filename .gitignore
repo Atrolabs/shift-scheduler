@@ -1,0 +1,25 @@
+# Editor
+.vscode/
+
+# Python
+.venv
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+.terraform.lock.hcl
+crash.log
+crash.*.log
+*.tfvars
+
+# Frontend
+node_modules/
+dist/
+
+# Custom
+*.env
+backup/
