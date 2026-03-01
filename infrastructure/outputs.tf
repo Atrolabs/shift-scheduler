@@ -18,6 +18,7 @@ output "cognito_hosted_ui_logout_url" {
 output "cognito_user_pool_client_id" {
   description = "Cognito User Pool Client ID"
   value       = module.cognito.user_pool_client_id
+  sensitive   = true
 }
 
 output "cognito_user_pool_domain" {
@@ -50,4 +51,10 @@ output "dev_admin_user" {
 output "dev_employee_user" {
   description = "Employee user credentials (dev only)"
   value       = var.environment == "dev" ? module.cognito.employee_user_username : null
+}
+
+output "dev_temp_password" {
+  description = "Temporary password for dev test users (dev only)"
+  value       = var.environment == "dev" ? module.cognito.dev_temp_password : null
+  sensitive   = true
 }

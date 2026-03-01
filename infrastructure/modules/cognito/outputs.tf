@@ -7,6 +7,7 @@ output "user_pool_id" {
 output "user_pool_client_id" {
   description = "ID of the Cognito User Pool Client"
   value       = aws_cognito_user_pool_client.main.id
+  sensitive   = true
 }
 
 # Hosted UI Outputs
@@ -50,4 +51,10 @@ output "admin_user_username" {
 output "employee_user_username" {
   description = "Username of the employee user (dev environment only)"
   value       = var.environment == "dev" ? aws_cognito_user.employee_user[0].username : null
+}
+
+output "dev_temp_password" {
+  description = "Temporary password for dev test users (dev environment only)"
+  value       = var.environment == "dev" ? random_password.dev_password[0].result : null
+  sensitive   = true
 }
