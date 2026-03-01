@@ -5,7 +5,7 @@ locals {
     Service   = "s3"
   }
 
-  tags = merge(local.module_tags, var.additional_tags)
+  tags = local.module_tags
 }
 
 resource "aws_s3_bucket" "this" {
@@ -77,4 +77,35 @@ resource "aws_s3_bucket_cors_configuration" "this" {
     expose_headers  = var.cors_expose_headers
     max_age_seconds = var.cors_max_age_seconds
   }
+}
+
+data "aws_iam_policy_document" "cloudfront_access" {
+  count = length(var.cloudfront_distribution_arns) > 0 ? 1 : 0
+
+  statement {
+    actions = ["s3:GetObject"]
+    effect  = "Allow"
+    sid     = "AllowCloudFrontReadOnly"
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = var.cloudfront_distribution_arns
+    }
+
+    principals {
+      identifiers = ["cloudfront.amazonaws.com"]
+      type        = "Service"
+    }
+
+    resources = ["${aws_s3_bucket.this.arn}/*"]
+  }
+}
+
+resource "aws_s3_bucket_policy" "cloudfront_access" {
+  count  = length(var.cloudfront_distribution_arns) > 0 ? 1 : 0
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.cloudfront_access[0].json
+
+  depends_on = [aws_s3_bucket_public_access_block.this]
 }
