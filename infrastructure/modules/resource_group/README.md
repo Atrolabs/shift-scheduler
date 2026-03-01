@@ -23,11 +23,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Optional additional tags applied on top of global + module tags | `map(string)` | `{}` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of the project | `string` | n/a | yes |
 | <a name="input_suffix"></a> [suffix](#input\_suffix) | Suffix for the resource name | `string` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_arn"></a> [arn](#output\_arn) | ARN of the resource group |
+| <a name="output_name"></a> [name](#output\_name) | Name of the resource group |
 <!-- END_TF_DOCS -->

@@ -8,6 +8,7 @@ No requirements.
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
@@ -26,14 +27,14 @@ No modules.
 | [aws_cognito_user_pool.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool) | resource |
 | [aws_cognito_user_pool_client.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool_client) | resource |
 | [aws_cognito_user_pool_domain.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cognito_user_pool_domain) | resource |
+| [random_password.dev_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Optional additional tags applied on top of global + module tags | `map(string)` | `{}` | no |
 | <a name="input_app_base_url"></a> [app\_base\_url](#input\_app\_base\_url) | Base URL of your application (e.g., https://app.example.com or http://localhost:3000) | `string` | `"http://localhost:3000"` | no |
-| <a name="input_environment"></a> [environment](#input\_environment) | Environment (dev, staging, prod) | `string` | n/a | yes |
+| <a name="input_environment"></a> [environment](#input\_environment) | Environment (dev, prod) | `string` | n/a | yes |
 | <a name="input_hosted_ui_domain_prefix"></a> [hosted\_ui\_domain\_prefix](#input\_hosted\_ui\_domain\_prefix) | Custom domain prefix for the Cognito Hosted UI (optional, will auto-generate if not provided) | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region for deployment | `string` | n/a | yes |
 | <a name="input_suffix"></a> [suffix](#input\_suffix) | Suffix for the resource name | `string` | n/a | yes |
@@ -44,6 +45,7 @@ No modules.
 |------|-------------|
 | <a name="output_admin_group_name"></a> [admin\_group\_name](#output\_admin\_group\_name) | Name of the admin user group |
 | <a name="output_admin_user_username"></a> [admin\_user\_username](#output\_admin\_user\_username) | Username of the admin user (dev environment only) |
+| <a name="output_dev_temp_password"></a> [dev\_temp\_password](#output\_dev\_temp\_password) | Temporary password for dev test users (dev environment only) |
 | <a name="output_employee_group_name"></a> [employee\_group\_name](#output\_employee\_group\_name) | Name of the employee user group |
 | <a name="output_employee_user_username"></a> [employee\_user\_username](#output\_employee\_user\_username) | Username of the employee user (dev environment only) |
 | <a name="output_hosted_ui_base_url"></a> [hosted\_ui\_base\_url](#output\_hosted\_ui\_base\_url) | Base URL for the Cognito Hosted UI (for custom URL construction) |

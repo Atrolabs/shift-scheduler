@@ -24,7 +24,6 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Optional additional tags applied on top of global + module tags | `map(string)` | `{}` | no |
 | <a name="input_blacklisted_countries"></a> [blacklisted\_countries](#input\_blacklisted\_countries) | List of countries to blacklist from the CloudFront distribution | `list(string)` | n/a | yes |
 | <a name="input_cache_policy_id"></a> [cache\_policy\_id](#input\_cache\_policy\_id) | Cache policy ID for the CloudFront distribution | `string` | n/a | yes |
 | <a name="input_default_root_object"></a> [default\_root\_object](#input\_default\_root\_object) | Default root object for the CloudFront distribution | `string` | n/a | yes |
