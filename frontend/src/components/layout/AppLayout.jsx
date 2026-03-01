@@ -1,9 +1,12 @@
 import React from 'react'
+import { useTheme } from '../../contexts/ThemeContext'
 import ThemeBackground from '../background/ThemeBackground'
 import AppHeader from '../header/AppHeader'
 import FooterBar from './FooterBar'
 
-function AppLayout({ theme, themeName, t, employee, navigate, variant = 'page', children }) {
+function AppLayout({ variant = 'page', children }) {
+  const { theme, themeName } = useTheme()
+
   return (
     <div
       style={{
@@ -17,17 +20,10 @@ function AppLayout({ theme, themeName, t, employee, navigate, variant = 'page', 
     >
       <ThemeBackground theme={theme} themeName={themeName} />
       <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: 24 }}>
-        <AppHeader
-          theme={theme}
-          themeName={themeName}
-          t={t}
-          employee={employee}
-          navigate={navigate}
-          variant={variant}
-        />
+        <AppHeader variant={variant} />
         {children}
       </div>
-      <FooterBar theme={theme} themeName={themeName} navigate={navigate} />
+      <FooterBar />
     </div>
   )
 }

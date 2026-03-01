@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Palette, Check } from 'lucide-react'
 import { useTheme } from '../../contexts/ThemeContext'
@@ -10,6 +10,7 @@ import {
   shadows,
   getTheme,
 } from '../../themes/tokens'
+import { useClickOutside } from '../../hooks/useClickOutside'
 
 const themes = getThemeNames()
 
@@ -18,21 +19,7 @@ export default function ThemeSelector() {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef(null)
 
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false)
-      }
-    }
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
+  useClickOutside(dropdownRef, () => setIsOpen(false), isOpen)
 
   return (
     <div style={{ position: 'relative' }} ref={dropdownRef}>
