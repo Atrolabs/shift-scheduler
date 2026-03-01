@@ -1,48 +1,40 @@
-# Shift Scheduler Backend API
+# Shift Scheduler Backend
 
-FastAPI backend service for the application.
-
-## Documentation
-
-FastAPI automatically generates interactive API documentation:
-
-- **Swagger UI**: http://localhost:8000/docs
+FastAPI service deployed as AWS Lambda via Mangum.
 
 ## Setup
 
-1. Create a virtual environment:
+1. Create and activate a virtual environment:
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
 
 2. Install dependencies:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+pip install -e ".[dev]"   # includes black, ruff, pytest
+```
 
-3. Configure AWS credentials:
-   Create a `.env` file in the backend directory:
+3. Configure environment variables in `backend/config/.env`:
 
-   ```env
-   AWS_REGION=eu-central-1
-   COGNITO_USER_POOL_ID=your-user-pool-id
-   COGNITO_USER_POOL_CLIENT_ID=your-client-id
-   ...
-   # Other environment variables
-   ```
+```env
+AWS_REGION=eu-central-1
+COGNITO_USER_POOL_ID=your-user-pool-id
+COGNITO_USER_POOL_CLIENT_ID=your-client-id
+```
 
 4. Start the development server:
-   ```bash
-   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-   ```
 
-The server will be available at:
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
 
-- **API**: http://localhost:8000/api
-- **Docs**: http://localhost:8000/docs
+The server exposes:
+
+- **API**: `http://localhost:8000/api`
+- **Swagger UI**: `http://localhost:8000/docs`
 
 ## Project Structure
 
@@ -51,52 +43,37 @@ backend/
 ├── api/
 │   └── api.py              # API routes and endpoints
 ├── config/
-│   └── aws_config.py       # AWS configuration settings
+│   └── aws_config.py       # AWS/Cognito settings (Pydantic)
 ├── models/
-│   ├── inputs/             # Pydantic input models
+│   ├── inputs/             # Request models
 │   ├── exceptions/         # Custom exception classes
 │   └── responses/          # Response models
-├── services/               # AWS Services methods
+├── services/               # AWS service methods
 ├── tests/                  # Test files
-├── utils/                  # Utility functions
-├── main.py                 # FastAPI application entrypoint
-└── requirements.txt        # Python dependencies
+└── main.py                 # FastAPI entrypoint
 ```
 
 ## Tech Overview
 
-- **Python**: 3.11+
-- **FastAPI**: 0.116.2 (web framework for building APIs)
-- **Uvicorn**: 0.35.0 (ASGI server for running FastAPI)
-- **Mangum**: 0.19.0 (AWS Lambda adapter for FastAPI)
-- **Boto3**: 1.34.0 (AWS SDK for Python)
-- **Pydantic**: 2.11.9 (data validation using Python type annotations)
-- **Pydantic Settings**: 2.11.0 (settings management for Pydantic)
+- **Python** 3.13+ with **FastAPI** 0.116
+- **Uvicorn** 0.35 (ASGI server)
+- **Mangum** 0.19 (Lambda adapter)
+- **Boto3** 1.34 (AWS SDK)
+- **Pydantic** 2.11 + **Pydantic Settings** 2.11
 
 ## Development
 
-### Code Formatting
-
-Format code with Black:
+Format and lint (configured in `pyproject.toml`):
 
 ```bash
-black backend/
-```
-
-### Linting
-
-Lint code with Ruff:
-
-```bash
-ruff check backend/
+black backend/        # format
+ruff check backend/   # lint
 ```
 
 ## Deployment
 
-The application is configured for AWS Lambda deployment using Mangum:
+The application runs on AWS Lambda behind API Gateway using Mangum:
 
 ```python
 handler = Mangum(app)
 ```
-
-This allows the FastAPI app to run as a Lambda function behind API Gateway.
