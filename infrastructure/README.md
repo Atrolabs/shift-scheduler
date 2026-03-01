@@ -1,118 +1,86 @@
-# Infrastructure as Code - Shift Scheduler
+# Shift Scheduler Infrastructure
 
-This directory contains Terraform configuration for deploying the infrastructure on AWS.
+Terraform configuration for deploying the application stack on AWS (`eu-central-1`).
 
 ## Setup
 
 ### 1. Configure Backend State
 
-Set up backend by copying the example files:
+Copy and edit the example backend configuration:
 
 ```bash
-# Development environment
 cp backend/backend-dev.tfvars.example backend/backend-dev.tfvars
-# Edit backend/backend-dev.tfvars with your actual S3 bucket name
-
-# Production environment
 cp backend/backend-prod.tfvars.example backend/backend-prod.tfvars
-# Edit backend/backend-prod.tfvars with your actual S3 bucket name
 ```
 
 ### 2. Configure Environment Variables
 
-Set up environment variable files:
+Copy and edit the example variable files:
 
 ```bash
-# Development environment
 cp vars/dev.tfvars.example vars/dev.tfvars
-# Edit vars/dev.tfvars with your configuration
-
-# Production environment
 cp vars/prod.tfvars.example vars/prod.tfvars
-# Edit vars/prod.tfvars with your configuration
 ```
 
-> [!IMPORTANT]
-> Never commit the actual `.tfvars` files to the repository. They contain sensitive information and are already ignored by `.gitignore`. Only commit the `.example` template files.
+> **Important:** Never commit `.tfvars` files. They contain sensitive values and are git-ignored. Only commit `.tfvars.example` templates.
 
 ## Common Commands
 
-### Format Terraform Code
-
-Format all Terraform files recursively:
+### Format
 
 ```bash
 terraform fmt --recursive
 ```
 
-### Initialize Terraform
-
-Initialize Terraform with backend configuration for a specific environment:
-
-**Development:**
+### Initialize
 
 ```bash
+# Development
 terraform init --reconfigure -backend-config=backend/backend-dev.tfvars
-```
 
-**Production:**
-
-```bash
+# Production
 terraform init --reconfigure -backend-config=backend/backend-prod.tfvars
 ```
 
-> [!IMPORTANT]
-> Use `--reconfigure` when switching between environments to reinitialize the backend with the new configuration.
+Use `--reconfigure` when switching between environments.
 
-### Apply Changes
-
-Apply the Terraform configuration:
-
-**Development:**
+### Apply
 
 ```bash
+# Development
 terraform apply -var-file="vars/dev.tfvars"
-```
 
-**Production:**
-
-```bash
+# Production
 terraform apply -var-file="vars/prod.tfvars"
 ```
 
-### Destroy Infrastructure
+### Destroy
 
-> [!WARNING]
-> This will destroy all resources in the specified environment.
-
-**Development:**
+> **Warning:** This destroys all resources in the target environment.
 
 ```bash
 terraform destroy -var-file="vars/dev.tfvars"
-```
-
-**Production:**
-
-```bash
-terraform destroy -var-file="vars/prod.tfvars"
 ```
 
 ## Directory Structure
 
 ```
 infrastructure/
-├── backend/                    # Backend configuration files
-├── modules/                    # Reusable Terraform modules
-├── vars/                       # Environment variable files
-├── backend.tf                  # Backend configuration
-├── locals.tf                   # Local variables
-├── main.tf                     # Main Terraform configuration
-├── outputs.tf                  # Output definitions
-├── providers.tf                # Providers configuration
-├── random.tf                   # Random string suffix
-├── versions.tf                 # Version constraints
-├── variables.tf                # Variable definitions
-└── README.md                   # This file
+├── backend/          # Remote state backend configs
+├── modules/          # Reusable Terraform modules
+│   ├── cloudfront/
+│   ├── cognito/
+│   ├── resource_group/
+│   └── s3/
+├── vars/             # Environment variable files
+├── backend.tf        # Backend configuration
+├── locals.tf         # Local variables and tags
+├── main.tf           # Module composition
+├── outputs.tf        # Root outputs
+├── providers.tf      # Provider configuration
+├── random.tf         # Random suffix resource
+├── variables.tf      # Input variables
+└── versions.tf       # Version constraints
 ```
 
 ---
@@ -132,7 +100,7 @@ infrastructure/
 
 | Name | Version |
 |------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.8.1 |
 
 ## Modules
 
@@ -141,7 +109,6 @@ infrastructure/
 | <a name="module_cloudfront"></a> [cloudfront](#module\_cloudfront) | ./modules/cloudfront | n/a |
 | <a name="module_cognito"></a> [cognito](#module\_cognito) | ./modules/cognito | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | ./modules/s3 | n/a |
-| <a name="module_frontend_bucket_policy"></a> [frontend\_bucket\_policy](#module\_frontend\_bucket\_policy) | ./modules/s3_policy | n/a |
 | <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group) | ./modules/resource_group | n/a |
 
 ## Resources
@@ -171,6 +138,7 @@ infrastructure/
 | <a name="output_cognito_user_pool_id"></a> [cognito\_user\_pool\_id](#output\_cognito\_user\_pool\_id) | Cognito User Pool ID |
 | <a name="output_dev_admin_user"></a> [dev\_admin\_user](#output\_dev\_admin\_user) | Admin user credentials (dev only) |
 | <a name="output_dev_employee_user"></a> [dev\_employee\_user](#output\_dev\_employee\_user) | Employee user credentials (dev only) |
+| <a name="output_dev_temp_password"></a> [dev\_temp\_password](#output\_dev\_temp\_password) | Temporary password for dev test users (dev only) |
 | <a name="output_frontend_bucket_domain_name"></a> [frontend\_bucket\_domain\_name](#output\_frontend\_bucket\_domain\_name) | Bucket domain name for use with CloudFront origins |
 | <a name="output_frontend_bucket_name"></a> [frontend\_bucket\_name](#output\_frontend\_bucket\_name) | S3 bucket that stores the frontend build artifacts |
 <!-- END_TF_DOCS -->

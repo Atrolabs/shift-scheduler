@@ -1,22 +1,17 @@
 # Shift Scheduler Frontend
 
-Modern React frontend with centralized theming, i18n, and a clean, mobile-first UI. Works with the FastAPI backend and is deployable to S3/CloudFront.
+React SPA with centralized theming, i18n, and a mobile-first UI. Deployed to S3/CloudFront.
 
 ## Setup
 
-1. Install dependencies:
+Install dependencies and start the development server:
 
 ```bash
 npm install
-```
-
-2. Start development server:
-
-```bash
 npm run dev
 ```
 
-On the dev environment, the app will run on `http://localhost:3000` and proxy API calls to the FastAPI backend at `http://localhost:8000`.
+The app runs on `http://localhost:3000` and proxies API calls to `http://localhost:8000`.
 
 ## Project Structure
 
@@ -25,107 +20,99 @@ src/
 ├── components/
 │   ├── background/     # Themed background visuals
 │   ├── controls/       # Inputs and selectors (ThemeSelector, LanguageSelector)
-│   ├── dashboard/      # Dashboard-specific building blocks (QuickMenu)
+│   ├── dashboard/      # Dashboard building blocks (QuickMenu)
 │   ├── header/         # AppHeader
 │   ├── layout/         # AppLayout, FooterBar
-│   ├── ui/             # UI primitives (Button, IconButton, Pill, SectionTitle)
+│   ├── ui/             # Primitives (Button, IconButton, Pill, SectionTitle)
 │   └── visuals/        # Decorative visuals (KoiFish, PapajElements)
-├── contexts/           # ThemeContext, LanguageContext
-├── i18n/               # Translations (JSON files)
-├── pages/              # Pages (DashboardPage, ShiftsPage, ...)
+├── contexts/           # ThemeContext, LanguageContext, EmployeeContext
+├── hooks/              # Custom hooks (useClickOutside)
+├── i18n/               # Translation JSON files
+├── pages/              # Page components
+├── themes/             # Theme tokens (single source of truth)
+├── utils/              # Utilities (apiCall)
 ├── routes.js           # Route constants and labels
-├── themes/             # Theme tokens and helpers (single source of truth)
-├── App.jsx             # Routing
+├── App.jsx             # Routing and providers
 └── main.jsx            # Entry point
 ```
 
 ## Tech Overview
 
-- **React**: 18.2.0
-- **React DOM**: 18.2.0
-- **React Router DOM**: 6.20.0
-- **Vite**: 5.0.8
-- **@vitejs/plugin-react**: 4.2.1
-- **Framer Motion**: 11.18.2 (animation library)
-- **Lucide React**: 0.446.0 (icon library)
+- **React** 18.2 with **React Router DOM** 6.20
+- **Vite** 5.0 (build tool and dev server)
+- **Framer Motion** 11.18 (animations)
+- **Lucide React** 0.555 (icons)
+
+## Architecture
 
 ### State Management
 
-- **React Contexts**:
-  - `ThemeContext` (reads from `themes/tokens.js`)
-  - `LanguageContext` (reads JSON files in `i18n/`)
+All state is managed via React Contexts consumed through hooks:
 
-### Architecture
+| Context | Hook | Purpose |
+|---------|------|---------|
+| `ThemeContext` | `useTheme()` | Theme tokens from `themes/tokens.js` |
+| `LanguageContext` | `useLanguage()` | i18n translations from `i18n/*.json` |
+| `EmployeeContext` | `useEmployee()` | Current employee data |
 
-- Theming via `themes/tokens.js` only (no scattered conditionals)
-- Mobile-first layout with `AppLayout` + sticky `FooterBar`
+Pages and layout components consume contexts directly — no prop drilling.
+
+### Layout
+
+- `AppLayout` provides the shared shell (background, header, footer)
+- Pages render content inside `AppLayout` with a `variant` prop (`"dashboard"` or `"page"`)
+- `FooterBar` is sticky and handles navigation via `useNavigate()`
+
+### Theming
+
+All theme values live in `themes/tokens.js`. Components read tokens from context — no scattered conditionals or inline color literals.
 
 ## Tutorials
 
-### Add a new page
+### Add a New Page
 
-1. Create a new file in `src/pages/YourPage.jsx`:
+1. Create `src/pages/YourPage.jsx`:
 
 ```jsx
-import React from 'react'
+import React from "react";
+import AppLayout from "../components/layout/AppLayout";
+import SectionTitle from "../components/ui/SectionTitle";
+import { useTheme } from "../contexts/ThemeContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function YourPage() {
-  return <div>Your content here</div>
-}
-
-export default YourPage
-```
-
-2. Add a route in `src/App.jsx` (prefer constants in `routes.js`):
-
-```jsx
-import YourPage from './pages/YourPage'
-;<Route path="/your-page" element={<YourPage />} />
-```
-
-3. Use `AppLayout` to get the shared background/header/footer shell:
-
-```jsx
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useTheme } from '../contexts/ThemeContext'
-import { useLanguage } from '../contexts/LanguageContext'
-import AppLayout from '../components/layout/AppLayout'
-import SectionTitle from '../components/ui/SectionTitle'
-
-function YourPage() {
-  const navigate = useNavigate()
-  const { theme, themeName } = useTheme()
-  const { t } = useLanguage()
-  const [employee] = useState({ name: 'John Doe', role: 'Server' })
+  const { theme } = useTheme();
+  const { t } = useLanguage();
 
   return (
-    <AppLayout
-      theme={theme}
-      themeName={themeName}
-      t={t}
-      employee={employee}
-      navigate={navigate}
-      variant="page"
-    >
-      <SectionTitle theme={theme}>{t('myShifts')}</SectionTitle>
-      {/* Your content here */}
+    <AppLayout variant="page">
+      <SectionTitle theme={theme}>{t("yourPageTitle")}</SectionTitle>
+      {/* Page content */}
     </AppLayout>
-  )
+  );
 }
 
-export default YourPage
+export default YourPage;
 ```
 
-### Add a new language
+2. Add a route constant in `src/routes.js`.
+
+3. Wire the route in `src/App.jsx`:
+
+```jsx
+import YourPage from "./pages/YourPage";
+// Inside <Routes>:
+<Route path={ROUTES.YOUR_PAGE} element={<YourPage />} />;
+```
+
+### Add a New Language
 
 1. Create a translation file in `src/i18n/` (e.g., `de.json`).
-2. Add any new keys used by UI (e.g., `myShifts`, `settings`, `quickAccess`).
-3. Restart dev server if files aren’t hot-reloaded.
+2. Add all keys used by the UI (`myShifts`, `settings`, `quickAccess`, etc.).
 
-### Add a new theme (single file change)
+### Add a New Theme
 
-Edit `src/themes/tokens.js` and add a new entry to the theme registry:
+Add an entry in `src/themes/tokens.js`:
 
 ```js
 mytheme: {
@@ -135,75 +122,44 @@ mytheme: {
   cardBorder: '...',
   textPrimary: '#hex',
   textSecondary: '#hex',
-  gridColor: 'rgba(...)',
-  footerOverlayBg: 'rgba(...)',
-  menu: { shifts: '#hex', availability: '#hex', profile: '#hex', settings: '#hex' },
-  buttonBg: '...',
-  logoutBg: '...',
-  roleBg: '...',
-  needsShadow: true,
-  backgroundAnimations: true
+  // ... see existing themes for full shape
 }
 ```
 
-- The theme picker auto-discovers the new theme via `getThemeNames()`.
-- All components consume tokens from the registry; no other files need changes.
+The theme picker auto-discovers new themes via `getThemeNames()`.
 
-### Add a new quick-access tile on the Dashboard
+### Add a Dashboard Quick-Access Tile
 
-1. Open `src/pages/DashboardPage.jsx`.
-2. Extend the `menuItems` array with a new item, using a color from `getMenuColors(themeName).<key>`.
-3. Add route and label in `routes.js` and translation in `i18n` files if needed.
+1. Extend `menuItems` in `src/pages/DashboardPage.jsx`.
+2. Use a color from `getMenuColors(themeName).<key>`.
+3. Add a route constant in `routes.js` and translation keys in `i18n/` files.
 
-## Calling FastAPI Backend
+## API Calls
 
-Use the `apiCall` utility:
+Use the `apiCall` utility for backend requests:
 
-```jsx
-import { apiCall } from './utils/api'
+```js
+import { apiCall } from "./utils/api";
 
-// In your component:
-const data = await apiCall('/auth/login', {
-  method: 'POST',
-  body: JSON.stringify({ email: '...', password: '...' }),
-})
+const data = await apiCall("/auth/login", {
+  method: "POST",
+  body: JSON.stringify({ email, password }),
+});
 ```
 
-## Building for Production (S3/CloudFront)
+In development, Vite proxies `/api` to the backend. In production, set `VITE_API_URL` in `.env`.
 
-1. Build the app:
+## Production Build
 
 ```bash
 npm run build
 ```
 
-2. This creates a `dist` folder with static files
-
-3. Upload `dist` folder contents to your S3 bucket
-
-4. Configure CloudFront to:
-   - Point to your S3 bucket
-   - Set error pages: `404` and `403` should return `index.html` (for React Router)
-   - Set default root object to `index.html`
-
-## Environment Variables
-
-Create `.env` file for production:
-
-```
-VITE_API_URL=https://your-api-url.com
-```
-
-In development, API calls use the proxy from `vite.config.js` (no env needed).
+Deploy the `dist/` folder to S3. CloudFront must return `index.html` for 403/404 errors (React Router SPA fallback).
 
 ## Conventions
 
-- Keep all theme-related values in `themes/tokens.js`.
-- Use `AppLayout` for page shells; pages should render content only.
-- Use `routes.js` constants to avoid string routes.
-- Use `LanguageContext.t(key)` with keys defined in the JSON files under `i18n/`.
-
-## Troubleshooting
-
-- Theme not appearing in selector: confirm the theme key exists in `themes/tokens.js` and matches the stored `localStorage` value.
-- Route not working on CloudFront: ensure 403/404 error responses return `index.html`.
+- Theme values in `themes/tokens.js` only — never scatter color literals
+- Use `AppLayout` for page shells — pages render content only
+- Use `routes.js` constants — avoid hardcoded route strings
+- Use `useLanguage().t(key)` for all user-facing text
