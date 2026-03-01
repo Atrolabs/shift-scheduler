@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Calendar, User, CheckCircle2, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../contexts/ThemeContext'
@@ -12,11 +12,6 @@ function DashboardPage() {
   const navigate = useNavigate()
   const { theme, themeName } = useTheme()
   const { t } = useLanguage()
-
-  const [employee] = useState({
-    name: 'John Doe',
-    role: 'Server',
-  })
 
   const menuColors = useMemo(() => getMenuColors(themeName), [themeName])
 
@@ -55,14 +50,7 @@ function DashboardPage() {
   )
 
   return (
-    <AppLayout
-      theme={theme}
-      themeName={themeName}
-      t={t}
-      employee={employee}
-      navigate={navigate}
-      variant="dashboard"
-    >
+    <AppLayout variant="dashboard">
       <QuickMenu
         menuItems={menuItems}
         theme={theme}

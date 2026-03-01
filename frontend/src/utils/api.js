@@ -26,7 +26,3 @@ export async function apiCall(endpoint, options = {}) {
 
   return response.json()
 }
-
-// Example usage:
-// import { apiCall } from './utils/api'
-// const data = await apiCall('/auth/login', { method: 'POST', body: JSON.stringify({...}) })
