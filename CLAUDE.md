@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Monorepo for a shift scheduling application deployed on AWS. Three independent components:
 
-- **`backend/`** — FastAPI API (Python 3.13+), deployed as AWS Lambda via Mangum
+- **`backend/`** — FastAPI API (Python 3.14+), deployed as AWS Lambda via Mangum
 - **`frontend/`** — React 18 SPA with Vite, deployed to S3/CloudFront
 - **`infrastructure/`** — Terraform IaC for AWS (eu-central-1)
 - **`scripts/`** — Bash automation helpers (run from repo root)

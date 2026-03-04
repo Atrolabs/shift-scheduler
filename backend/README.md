@@ -10,17 +10,12 @@ FastAPI automatically generates interactive API documentation:
 
 ## Setup
 
-1. Create a virtual environment:
+1. From the **repo root**, create a virtual environment and install dependencies:
 
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   pip install -r requirements.txt
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -e ".[dev]"
    ```
 
 3. Configure AWS credentials:
@@ -59,19 +54,20 @@ backend/
 ├── services/               # AWS Services methods
 ├── tests/                  # Test files
 ├── utils/                  # Utility functions
-├── main.py                 # FastAPI application entrypoint
-└── requirements.txt        # Python dependencies
+└── main.py                 # FastAPI application entrypoint
 ```
+
+> Dependencies are defined in [`pyproject.toml`](../pyproject.toml) at the repo root.
 
 ## Tech Overview
 
-- **Python**: 3.11+
-- **FastAPI**: 0.116.2 (web framework for building APIs)
-- **Uvicorn**: 0.35.0 (ASGI server for running FastAPI)
-- **Mangum**: 0.19.0 (AWS Lambda adapter for FastAPI)
-- **Boto3**: 1.34.0 (AWS SDK for Python)
-- **Pydantic**: 2.11.9 (data validation using Python type annotations)
-- **Pydantic Settings**: 2.11.0 (settings management for Pydantic)
+- **Python**: 3.14+
+- **FastAPI**: 0.135.1 (web framework for building APIs)
+- **Uvicorn**: 0.41.0 (ASGI server for running FastAPI)
+- **Mangum**: 0.21.0 (AWS Lambda adapter for FastAPI)
+- **Boto3**: 1.42.60 (AWS SDK for Python)
+- **Pydantic**: 2.12.5 (data validation using Python type annotations)
+- **Pydantic Settings**: 2.13.1 (settings management for Pydantic)
 
 ## Development
 
