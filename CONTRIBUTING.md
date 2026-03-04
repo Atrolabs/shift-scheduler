@@ -1,134 +1,170 @@
+<div align="center">
+
 # Contributing
+
+**Guidelines for branching, commits, pull requests, and releases.**
+
+</div>
+
+---
+
+## Workflow
 
 This repository follows a PR-to-`master` workflow.
 
-## Branching Workflow
+| Step | Rule |
+|------|------|
+| Branch from | `master` |
+| Branch lifetime | Short-lived, focused on a single change |
+| Merge target | `master` via PR only |
+| Merge strategy | Squash merge |
+| After merge | Delete the branch |
 
-- Branch off `master`.
-- Keep branches short-lived and focused on a single change.
-- Open a pull request directly into `master`.
-- Merge via PR only (no direct pushes to `master`).
-- Delete branch after merge.
+> [!IMPORTANT]
+> No direct pushes to `master`. All changes go through pull requests.
 
-## Branch Naming (Required)
+## Branch Naming
 
-Branch format:
+Format: **`<type>/<short-kebab-summary>`**
 
-- `<type>/<short-kebab-summary>`
+### Allowed Types
 
-Allowed `<type>` values:
+| Type | Purpose |
+|------|---------|
+| `feat` | New functionality |
+| `fix` | Bug fix |
+| `chore` | Tooling, dependencies, config |
+| `docs` | Documentation only |
+| `refactor` | Code restructuring, no behavior change |
+| `test` | Tests only |
 
-- `feat`
-- `fix`
-- `chore`
-- `docs`
-- `refactor`
-- `test`
+### Rules
 
-Rules:
+- Lowercase only
+- Exactly one `/` between type and summary
+- Summary uses letters, numbers, and `-` only (no `_` or spaces)
+- Branch type should match the commit types within it
 
-- Use lowercase only.
-- Use exactly one `/` between `type` and summary.
-- Summary must use letters, numbers, and `-` only.
-- Do not use `_` or spaces.
-- Branch type should match the commit types within it.
+<details>
+<summary><strong>Examples</strong></summary>
 
-Valid branch names:
+<br>
+
+**Valid:**
 
 - `feat/monthly-availability-view`
 - `fix/login-callback-redirect`
 - `chore/update-dependencies`
 
-Invalid branch names:
+**Invalid:**
 
-- `feature/monthly-availability-view` (invalid type)
-- `feat_monthly-availability-view` (missing `/`)
-- `feat/monthly_availability_view` (uses `_`)
-- `feat/Monthly-Availability-View` (contains uppercase)
+| Branch | Problem |
+|--------|---------|
+| `feature/monthly-availability-view` | Invalid type (`feature` not allowed) |
+| `feat_monthly-availability-view` | Missing `/` separator |
+| `feat/monthly_availability_view` | Uses `_` instead of `-` |
+| `feat/Monthly-Availability-View` | Contains uppercase |
 
-## Commit Messages (Required)
+</details>
 
-Commit format:
+## Commit Messages
 
-- `<type>: <short imperative summary>`
+Format: **`<type>: <short imperative summary>`**
 
-Allowed `<type>` values:
+Uses the same [allowed types](#allowed-types) as branch naming.
 
-- `feat`
-- `fix`
-- `chore`
-- `docs`
-- `refactor`
-- `test`
+### Rules
 
-Rules:
+- Lowercase `type`
+- Imperative form (e.g., `add`, `fix`, `update`)
+- Target up to 72 characters
 
-- Use lowercase `type`.
-- Use one-line summary in imperative form (for example: `add`, `fix`, `update`).
-- Keep summary concise (target up to 72 characters).
+<details>
+<summary><strong>Examples</strong></summary>
 
-Valid commit messages:
+<br>
+
+**Valid:**
 
 - `feat: add monthly availability view`
 - `fix: handle missing access token`
 - `docs: update local setup steps`
 
-Invalid commit messages:
+**Invalid:**
 
-- `Feature: Add monthly availability view` (invalid type case)
-- `fix add monthly availability view` (missing `:`)
-- `feat(auth): handle missing access token` (no scopes)
+| Commit | Problem |
+|--------|---------|
+| `Feature: Add monthly availability view` | Invalid type case |
+| `fix add monthly availability view` | Missing `:` separator |
+| `feat(auth): handle missing access token` | Scopes not allowed |
+
+</details>
 
 ## Pull Requests
 
-PR title format (same as commit format):
+PR title format is the same as commit format: **`<type>: <short imperative summary>`**
 
-- `<type>: <short imperative summary>`
+| Rule | Details |
+|------|---------|
+| Merge strategy | All PRs are **squash-merged** into `master` |
+| Squash message | Derived from PR title + auto-appended PR number |
+| Result on `master` | `<type>: <summary> (#<pr-number>)` |
 
-Rules:
+> [!NOTE]
+> The PR title becomes the permanent history entry on `master`. Keep it concise and descriptive.
 
-- All PRs are **squash-merged** into `master`.
-- The squash commit message is derived from the PR title, with the PR number appended automatically.
-- The resulting commit on `master` will read: `<type>: <summary> (#<pr-number>)`.
-- Keep the PR title concise and descriptive — it becomes the permanent history entry.
+<details>
+<summary><strong>Examples</strong></summary>
 
-Valid PR titles:
+<br>
+
+**Valid PR titles:**
 
 - `feat: add monthly availability view`
 - `fix: handle missing access token`
 - `docs: update contributing guidelines`
-Invalid PR titles:
 
-- `Add monthly availability view` (missing type prefix)
-- `feat: add monthly availability view (#12)` (do not add PR number manually)
-- `feat(auth): handle missing access token` (no scopes)
+**Invalid PR titles:**
 
-Example end-to-end flow:
+| Title | Problem |
+|-------|---------|
+| `Add monthly availability view` | Missing type prefix |
+| `feat: add monthly availability view (#12)` | Don't add PR number manually |
+| `feat(auth): handle missing access token` | Scopes not allowed |
+
+**End-to-end flow:**
 
 1. Create branch: `feat/monthly-availability-view`
 2. Open PR with title: `feat: add monthly availability view`
 3. Squash-merge → commit on `master`: `feat: add monthly availability view (#12)`
 
+</details>
+
 ## Closing Issues
 
-To automatically close a GitHub issue when your PR is merged, add a keyword followed by the issue number in the **PR description body** (not the title):
+Add a keyword in the **PR description body** (not the title) to auto-close issues on merge:
 
-- `Closes #<issue>`
-- `Fixes #<issue>`
+```
+Closes #<issue>
+Fixes #<issue>
+```
 
-GitHub closes the referenced issue when the PR is squash-merged into `master`. The PR template includes a placeholder for this.
+| Rule | Details |
+|------|---------|
+| Location | PR body only, never the title |
+| Multiple issues | One keyword per line |
+| When closed | On squash-merge into `master` |
 
-Rules:
-
-- Put the keyword in the PR body, never in the PR title.
-- Use one keyword per issue. To close multiple issues, add multiple lines.
-- The issue is closed only when the PR is merged into `master`.
+> [!NOTE]
+> The PR template includes a `Closes #` placeholder.
 
 ## Releases
 
-Releases are automated via [Release Please](https://github.com/googleapis/release-please). After PRs are squash-merged, Release Please:
+Releases are automated via [Release Please](https://github.com/googleapis/release-please).
 
-- Accumulates changes into an auto-updated release PR.
-- Groups entries by type (`feat` → Features, `fix` → Bug Fixes, etc.).
-- Bumps the version using semver (`feat` = minor, `fix` = patch).
-- On merge of the release PR, creates a GitHub Release, git tag, and updates `CHANGELOG.md`.
+| Step | What Happens |
+|------|--------------|
+| PRs merged | Changes accumulate in an auto-updated release PR |
+| Grouping | Entries grouped by type (`feat` → Features, `fix` → Bug Fixes, etc.) |
+| Versioning | Semver bump (`feat` = minor, `fix` = patch) |
+| Release PR merged | GitHub Release created, git tag applied, `CHANGELOG.md` updated |
