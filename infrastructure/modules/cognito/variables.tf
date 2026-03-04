@@ -1,9 +1,3 @@
-variable "additional_tags" {
-  default     = {}
-  description = "Optional additional tags applied on top of global + module tags"
-  type        = map(string)
-}
-
 variable "app_base_url" {
   default     = "http://localhost:3000"
   description = "Base URL of your application (e.g., https://app.example.com or http://localhost:3000)"
@@ -11,12 +5,12 @@ variable "app_base_url" {
 }
 
 variable "environment" {
-  description = "Environment (dev, staging, prod)"
+  description = "Environment (dev, prod)"
   type        = string
 
   validation {
-    condition     = contains(["dev", "staging", "prod"], var.environment)
-    error_message = "Environment must be one of: dev, staging, prod."
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "Environment must be one of: dev, prod."
   }
 }
 

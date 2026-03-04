@@ -5,7 +5,7 @@ locals {
     Service   = "cloudfront"
   }
 
-  tags = merge(local.module_tags, var.additional_tags)
+  tags = local.module_tags
 }
 
 resource "aws_cloudfront_origin_access_control" "this" {

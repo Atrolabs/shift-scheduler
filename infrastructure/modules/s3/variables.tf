@@ -4,12 +4,6 @@ variable "abort_incomplete_multipart_upload_days" {
   type        = number
 }
 
-variable "additional_tags" {
-  default     = {}
-  description = "Optional additional tags applied on top of global + module tags"
-  type        = map(string)
-}
-
 variable "cors_allowed_headers" {
   default     = ["*"]
   description = "Allowed headers for the CORS rule"
@@ -55,4 +49,10 @@ variable "versioning_enabled" {
   default     = false
   description = "Toggle object versioning"
   type        = bool
+}
+
+variable "cloudfront_distribution_arns" {
+  default     = []
+  description = "CloudFront distribution ARNs allowed to read from this bucket (empty list skips policy)"
+  type        = list(string)
 }

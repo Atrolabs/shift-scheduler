@@ -5,7 +5,7 @@ locals {
     Service   = "cognito"
   }
 
-  tags = merge(local.module_tags, var.additional_tags)
+  tags = local.module_tags
 }
 
 resource "aws_cognito_user_pool" "main" {
@@ -156,6 +156,12 @@ resource "aws_cognito_user_group" "employee" {
 # DEV RESOURCES
 #==============================================================================
 
+resource "random_password" "dev_password" {
+  count   = var.environment == "dev" ? 1 : 0
+  length  = 16
+  special = true
+}
+
 # Test Users (only in dev environment)
 resource "aws_cognito_user" "admin_user" {
   count        = var.environment == "dev" ? 1 : 0
@@ -163,16 +169,20 @@ resource "aws_cognito_user" "admin_user" {
   username     = "admin@example.com"
 
   attributes = {
-    email             = "admin@example.com"
-    name              = "Admin"
-    family_name       = "User"
-    phone_number      = "+1234567890"
-    "position" = "Manager"
+    email        = "admin@example.com"
+    name         = "Admin"
+    family_name  = "User"
+    phone_number = "+1234567890"
+    "position"   = "Manager"
   }
 
-  temporary_password   = "TempPass123!"
+  temporary_password   = random_password.dev_password[0].result
   force_alias_creation = false
   message_action       = "SUPPRESS"
+
+  lifecycle {
+    ignore_changes = [temporary_password]
+  }
 }
 
 resource "aws_cognito_user" "employee_user" {
@@ -181,16 +191,20 @@ resource "aws_cognito_user" "employee_user" {
   username     = "employee@example.com"
 
   attributes = {
-    email             = "employee@example.com"
-    name              = "Employee"
-    family_name       = "User"
-    phone_number      = "+1234567891"
-    "position" = "Waitress"
+    email        = "employee@example.com"
+    name         = "Employee"
+    family_name  = "User"
+    phone_number = "+1234567891"
+    "position"   = "Waitress"
   }
 
-  temporary_password   = "TempPass123!"
+  temporary_password   = random_password.dev_password[0].result
   force_alias_creation = false
   message_action       = "SUPPRESS"
+
+  lifecycle {
+    ignore_changes = [temporary_password]
+  }
 }
 
 # Add users to groups

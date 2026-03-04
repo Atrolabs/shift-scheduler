@@ -1,9 +1,3 @@
-variable "additional_tags" {
-  default     = {}
-  description = "Optional additional tags applied on top of global + module tags"
-  type        = map(string)
-}
-
 variable "blacklisted_countries" {
   description = "List of countries to blacklist from the CloudFront distribution"
   type        = list(string)

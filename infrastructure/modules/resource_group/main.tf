@@ -5,7 +5,7 @@ locals {
     Service   = "resource-group"
   }
 
-  tags = merge(local.module_tags, var.additional_tags)
+  tags = local.module_tags
 }
 
 resource "aws_resourcegroups_group" "project" {

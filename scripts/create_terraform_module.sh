@@ -27,8 +27,18 @@ fi
 
 mkdir -p "${MODULE_DIR}"
 
-cat <<'EOF' > "${MODULE_DIR}/main.tf"
-// TODO: add resources
+cat <<EOF > "${MODULE_DIR}/main.tf"
+locals {
+  module_tags = {
+    Component = "${MODULE_NAME}"
+    Path      = "infrastructure/modules/${MODULE_NAME}"
+    Service   = "${MODULE_NAME}"
+  }
+
+  tags = local.module_tags
+}
+
+// TODO: add resources (apply tags = local.tags on taggable resources)
 EOF
 
 cat <<'EOF' > "${MODULE_DIR}/variables.tf"

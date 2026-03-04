@@ -5,9 +5,10 @@ module "resource_group" {
 }
 
 module "frontend_bucket" {
-  source        = "./modules/s3"
-  force_destroy = var.environment != "prod"
-  suffix        = local.suffix
+  source                       = "./modules/s3"
+  force_destroy                = var.environment != "prod"
+  suffix                       = local.suffix
+  cloudfront_distribution_arns = [module.cloudfront.arn]
 }
 
 module "cloudfront" {
@@ -19,13 +20,6 @@ module "cloudfront" {
   frontend_bucket_name        = module.frontend_bucket.name
   origin_request_policy_id    = local.cloudfront_origin_request_policy_id
   suffix                      = local.suffix
-}
-
-module "frontend_bucket_policy" {
-  source                       = "./modules/s3_policy"
-  cloudfront_distribution_arns = [module.cloudfront.arn]
-  s3_bucket_arn                = module.frontend_bucket.arn
-  s3_bucket_id                 = module.frontend_bucket.id
 }
 
 module "cognito" {
