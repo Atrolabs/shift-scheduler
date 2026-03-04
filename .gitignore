@@ -25,3 +25,4 @@ dist/
 # Custom
 *.env
 backup/
+.private/
