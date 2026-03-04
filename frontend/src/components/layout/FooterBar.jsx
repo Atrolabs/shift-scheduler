@@ -1,10 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Home } from 'lucide-react'
+import { useTheme } from '../../contexts/ThemeContext'
 import { ROUTES } from '../../routes'
 import { zIndex, needsShadow, shadows } from '../../themes/tokens'
 import IconButton from '../ui/IconButton'
 
-function FooterBar({ theme, themeName, navigate }) {
+function FooterBar() {
+  const navigate = useNavigate()
+  const { theme, themeName } = useTheme()
+
   const barStyle = {
     position: 'fixed',
     left: 0,

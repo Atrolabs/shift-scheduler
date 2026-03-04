@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { LogOut } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../../contexts/ThemeContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useEmployee } from '../../contexts/EmployeeContext'
 import { ROUTES } from '../../routes'
 import { spacing } from '../../themes/tokens'
 import LanguageSelector from '../controls/LanguageSelector'
@@ -8,7 +12,11 @@ import ThemeSelector from '../controls/ThemeSelector'
 import IconButton from '../ui/IconButton'
 import Pill from '../ui/Pill'
 
-function AppHeader({ theme, themeName, t, employee, navigate, variant = 'dashboard' }) {
+function AppHeader({ variant = 'dashboard' }) {
+  const navigate = useNavigate()
+  const { theme, themeName } = useTheme()
+  const { t } = useLanguage()
+  const employee = useEmployee()
   const nameRef = useRef(null)
   const [isOverflowing, setIsOverflowing] = useState(false)
 

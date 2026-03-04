@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Home } from 'lucide-react'
 import { useTheme } from '../contexts/ThemeContext'
@@ -12,17 +12,9 @@ function NotFoundPage() {
   const navigate = useNavigate()
   const { theme, themeName } = useTheme()
   const { t } = useLanguage()
-  const [employee] = useState({ name: 'John Doe', role: 'Server' })
 
   return (
-    <AppLayout
-      theme={theme}
-      themeName={themeName}
-      t={t}
-      employee={employee}
-      navigate={navigate}
-      variant="page"
-    >
+    <AppLayout variant="page">
       <SectionTitle theme={theme}>{t('notFound')}</SectionTitle>
       <p style={{ color: theme.textSecondary, marginBottom: 24 }}>{t('notFoundMessage')}</p>
       <Button onClick={() => navigate(ROUTES.DASHBOARD)} theme={theme} themeName={themeName}>

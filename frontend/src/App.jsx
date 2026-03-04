@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { EmployeeProvider } from './contexts/EmployeeContext'
 import { ROUTES } from './routes'
 import DashboardPage from './pages/DashboardPage'
 import ShiftsPage from './pages/ShiftsPage'
@@ -13,17 +14,19 @@ function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-            <Route path={ROUTES.SHIFTS} element={<ShiftsPage />} />
-            <Route path={ROUTES.AVAILABILITY} element={<AvailabilityPage />} />
-            <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-            <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Router>
+        <EmployeeProvider>
+          <Router>
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+              <Route path={ROUTES.SHIFTS} element={<ShiftsPage />} />
+              <Route path={ROUTES.AVAILABILITY} element={<AvailabilityPage />} />
+              <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+              <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Router>
+        </EmployeeProvider>
       </LanguageProvider>
     </ThemeProvider>
   )

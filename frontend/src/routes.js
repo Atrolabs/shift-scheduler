@@ -5,7 +5,6 @@ export const ROUTES = {
   PROFILE: '/profile',
   SETTINGS: '/settings',
   LOGIN: '/login',
-  NOTIFICATIONS: '/notifications',
 }
 
 export const ROUTE_LABELS = {
