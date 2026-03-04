@@ -30,22 +30,17 @@ This file applies to the entire monorepo:
 
 ## Formatting And Validation
 
-Run only what is relevant to files you changed.
+Run only what is relevant to files you changed. All commands are available as `just` recipes from the repo root (run `just` to list them).
 
-- Backend (`backend/`)
-  - Format: `black backend/`
-  - Lint: `ruff check backend/`
-- Frontend (`frontend/`)
-  - Format: `npm run format`
-  - Format check: `npm run format:check`
-- Terraform (`infrastructure/`)
-  - Format: `terraform fmt --recursive`
-  - If variables/outputs/resources changed, refresh docs: `./scripts/generate_terraform_docs.sh`
+- Backend (`backend/`): `just be-format`, `just be-lint`
+- Frontend (`frontend/`): `just fe-format`, `just fe-format-check`
+- Terraform (`infrastructure/`): `just tf-fmt`
+  - If variables/outputs/resources changed, refresh docs: `just tf-docs`
+- All at once: `just format`, `just lint`
 
 Notes:
 
-- `pyproject.toml` currently defines Black style (line length 100, `py311` target).
-- Ruff is used for linting; no repository Ruff formatting config is defined yet.
+- `pyproject.toml` defines Black style (line length 100, `py313` target) and Ruff lint rules.
 
 ## Backend Conventions (`backend/`)
 
@@ -55,7 +50,7 @@ Notes:
 - Settings use Pydantic settings classes from `backend/config/aws_config.py`.
 - Keep request/response models in `backend/models/` (expand as needed).
 - Prefer typed function signatures and explicit return shapes.
-- Handle boto3 `ClientError` paths explicitly and return structured error payloads.
+- Handle boto3 `ClientError` by logging the error and raising `HTTPException`; do not leak raw AWS error messages.
 
 Important config detail:
 
@@ -87,15 +82,13 @@ When adding UI features:
 Tagging strategy (must stay consistent):
 
 1. Global tags are defined in `infrastructure/locals.tf` and applied via provider `default_tags`.
-2. Each module defines `local.module_tags` in its own `main.tf`.
-3. Each module accepts `additional_tags` and merges as:
-   `merge(local.module_tags, var.additional_tags)`.
+2. Each module defines `local.module_tags` in its own `main.tf` and applies them via `tags = local.module_tags`.
 
 Do not bypass this pattern on new taggable resources.
 
 ## Scripts And Automation
 
-Run scripts from repo root unless script docs say otherwise.
+Run scripts from repo root. See root `README.md` for full descriptions.
 
 - `./scripts/deploy_frontend_to_s3.sh [environment]`
   - Builds frontend and syncs to Terraform-managed S3 bucket.
