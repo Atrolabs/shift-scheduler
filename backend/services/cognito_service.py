@@ -1,9 +1,14 @@
 """Cognito Service for user management"""
 
+import logging
+
 import boto3
 from botocore.exceptions import ClientError
-from typing import Dict, Any
+from fastapi import HTTPException
+
 from config.aws_config import CognitoSettings
+
+logger = logging.getLogger(__name__)
 
 
 class CognitoService:
@@ -18,50 +23,31 @@ class CognitoService:
             region_name=self.settings.region,
         )
 
-    def get_user(self, username: str) -> Dict[str, Any]:
-        """
-        Get user information from Cognito
-
-        Args:
-            username: Username (email) of the user
-
-        Returns:
-            Dict containing user information
-        """
+    def get_user(self, username: str) -> dict:
+        """Get user information from Cognito."""
         try:
             response = self.cognito_client.admin_get_user(
                 UserPoolId=self.user_pool_id, Username=username
             )
-
-            return {"success": True, "user": response}
-
+            return {"user": response}
         except ClientError as e:
-            return {
-                "success": False,
-                "error": e.response["Error"]["Code"],
-                "message": e.response["Error"]["Message"],
-            }
-
-    def list_users(self, limit: int = 10) -> Dict[str, Any]:
-        """
-        List users in the user pool
-
-        Args:
-            limit: Maximum number of users to return
-
-        Returns:
-            Dict containing list of users
-        """
-        try:
-            response = self.cognito_client.list_users(
-                UserPoolId=self.user_pool_id, Limit=limit
+            error_code = e.response["Error"]["Code"]
+            logger.error(
+                "Cognito get_user failed: %s — %s", error_code, e.response["Error"]["Message"]
             )
+            if error_code == "UserNotFoundException":
+                raise HTTPException(status_code=404, detail="User not found")
+            raise HTTPException(status_code=500, detail="Failed to retrieve user")
 
-            return {"success": True, "users": response["Users"]}
-
+    def list_users(self, limit: int = 10) -> dict:
+        """List users in the user pool."""
+        try:
+            response = self.cognito_client.list_users(UserPoolId=self.user_pool_id, Limit=limit)
+            return {"users": response["Users"]}
         except ClientError as e:
-            return {
-                "success": False,
-                "error": e.response["Error"]["Code"],
-                "message": e.response["Error"]["Message"],
-            }
+            logger.error(
+                "Cognito list_users failed: %s — %s",
+                e.response["Error"]["Code"],
+                e.response["Error"]["Message"],
+            )
+            raise HTTPException(status_code=500, detail="Failed to list users")
