@@ -1,17 +1,43 @@
+<div align="center">
+
 # Shift Scheduler Frontend
 
-React SPA with centralized theming, i18n, and a mobile-first UI. Deployed to S3/CloudFront.
+**React SPA with centralized theming, i18n, and a mobile-first UI. Deployed to S3/CloudFront.**
+
+![React](https://img.shields.io/badge/React-18.2-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.18-0055FF?style=for-the-badge&logo=framer&logoColor=white)
+
+</div>
+
+---
+
+## Prerequisites
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| [Node.js](https://nodejs.org/) | 22.x LTS | Runtime (`frontend/.nvmrc`) |
+| [npm](https://www.npmjs.com/) | Latest | Package manager |
 
 ## Setup
 
-Install dependencies and start the development server:
+```bash
+just fe-install   # install dependencies
+just fe-dev       # start dev server
+```
+
+Or directly:
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
 
 The app runs on `http://localhost:3000` and proxies API calls to `http://localhost:8000`.
+
+> [!TIP]
+> Run `just dev` from the repo root to start both frontend and backend servers in parallel.
 
 ## Project Structure
 
@@ -36,18 +62,33 @@ src/
 └── main.jsx            # Entry point
 ```
 
-## Tech Overview
+## Tech Stack
 
-- **React** 18.2 with **React Router DOM** 6.20
-- **Vite** 5.0 (build tool and dev server)
-- **Framer Motion** 11.18 (animations)
-- **Lucide React** 0.555 (icons)
+| Technology | Version | Purpose | Docs |
+|------------|---------|---------|------|
+| React | 18.2 | UI framework | [react.dev](https://react.dev/) |
+| React Router DOM | 6.20 | Client-side routing | [reactrouter.com](https://reactrouter.com/) |
+| Vite | 5.0 | Build tool & dev server | [vite.dev](https://vite.dev/) |
+| Framer Motion | 11.18 | Animations | [motion.dev](https://motion.dev/) |
+| Lucide React | 0.555 | Icons | [lucide.dev](https://lucide.dev/) |
+
+<details>
+<summary><strong>Dev Dependencies</strong></summary>
+
+<br>
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| @vitejs/plugin-react | 4.2 | Vite React plugin |
+| Prettier | — | Code formatter |
+
+</details>
 
 ## Architecture
 
 ### State Management
 
-All state is managed via React Contexts consumed through hooks:
+All state is managed via React Contexts consumed through hooks — no prop drilling.
 
 | Context | Hook | Purpose |
 |---------|------|---------|
@@ -55,13 +96,12 @@ All state is managed via React Contexts consumed through hooks:
 | `LanguageContext` | `useLanguage()` | i18n translations from `i18n/*.json` |
 | `EmployeeContext` | `useEmployee()` | Current employee data |
 
-Pages and layout components consume contexts directly — no prop drilling.
-
 ### Layout
 
-- `AppLayout` provides the shared shell (background, header, footer)
-- Pages render content inside `AppLayout` with a `variant` prop (`"dashboard"` or `"page"`)
-- `FooterBar` is sticky and handles navigation via `useNavigate()`
+| Component | Role |
+|-----------|------|
+| `AppLayout` | Shared shell (background, header, footer). Pages pass `variant="dashboard"` or `variant="page"` |
+| `FooterBar` | Sticky bottom nav, handles routing via `useNavigate()` |
 
 ### Theming
 
@@ -69,9 +109,12 @@ All theme values live in `themes/tokens.js`. Components read tokens from context
 
 ## Tutorials
 
-### Add a New Page
+<details>
+<summary><strong>Add a New Page</strong></summary>
 
-1. Create `src/pages/YourPage.jsx`:
+<br>
+
+**1.** Create `src/pages/YourPage.jsx`:
 
 ```jsx
 import React from "react";
@@ -95,9 +138,9 @@ function YourPage() {
 export default YourPage;
 ```
 
-2. Add a route constant in `src/routes.js`.
+**2.** Add a route constant in `src/routes.js`.
 
-3. Wire the route in `src/App.jsx`:
+**3.** Wire the route in `src/App.jsx`:
 
 ```jsx
 import YourPage from "./pages/YourPage";
@@ -105,12 +148,22 @@ import YourPage from "./pages/YourPage";
 <Route path={ROUTES.YOUR_PAGE} element={<YourPage />} />;
 ```
 
-### Add a New Language
+</details>
+
+<details>
+<summary><strong>Add a New Language</strong></summary>
+
+<br>
 
 1. Create a translation file in `src/i18n/` (e.g., `de.json`).
 2. Add all keys used by the UI (`myShifts`, `settings`, `quickAccess`, etc.).
 
-### Add a New Theme
+</details>
+
+<details>
+<summary><strong>Add a New Theme</strong></summary>
+
+<br>
 
 Add an entry in `src/themes/tokens.js`:
 
@@ -128,13 +181,20 @@ mytheme: {
 
 The theme picker auto-discovers new themes via `getThemeNames()`.
 
-### Add a Dashboard Quick-Access Tile
+</details>
+
+<details>
+<summary><strong>Add a Dashboard Quick-Access Tile</strong></summary>
+
+<br>
 
 1. Extend `menuItems` in `src/pages/DashboardPage.jsx`.
 2. Use a color from `getMenuColors(themeName).<key>`.
 3. Add a route constant in `routes.js` and translation keys in `i18n/` files.
 
-## API Calls
+</details>
+
+## API Integration
 
 Use the `apiCall` utility for backend requests:
 
@@ -147,19 +207,45 @@ const data = await apiCall("/auth/login", {
 });
 ```
 
-In development, Vite proxies `/api` to the backend. In production, set `VITE_API_URL` in `.env`.
+| Environment | Behavior |
+|-------------|----------|
+| Development | Vite proxies `/api` to `http://localhost:8000` |
+| Production | Set `VITE_API_URL` in `.env` |
 
-## Production Build
+## Development
+
+| Task | Just Recipe | Direct Command |
+|------|-------------|----------------|
+| Format | `just fe-format` | `cd frontend && npm run format` |
+| Check formatting | `just fe-format-check` | `cd frontend && npm run format:check` |
+| Build | `just fe-build` | `cd frontend && npm run build` |
+| Format + lint all | `just format && just lint` | — |
+
+> [!TIP]
+> Run `just` from the repo root to see all available recipes.
+
+## Production Build & Deploy
 
 ```bash
-npm run build
+just fe-build
+```
+
+Or directly:
+
+```bash
+cd frontend && npm run build
 ```
 
 Deploy the `dist/` folder to S3. CloudFront must return `index.html` for 403/404 errors (React Router SPA fallback).
 
+> [!NOTE]
+> Use `./scripts/deploy_frontend_to_s3.sh [environment]` to build and deploy in one step.
+
 ## Conventions
 
-- Theme values in `themes/tokens.js` only — never scatter color literals
-- Use `AppLayout` for page shells — pages render content only
-- Use `routes.js` constants — avoid hardcoded route strings
-- Use `useLanguage().t(key)` for all user-facing text
+| Rule | Details |
+|------|---------|
+| Theme values | `themes/tokens.js` only — never scatter color literals |
+| Page shells | Use `AppLayout` — pages render content only |
+| Route strings | Use `routes.js` constants — avoid hardcoded paths |
+| User-facing text | Use `useLanguage().t(key)` for all labels |

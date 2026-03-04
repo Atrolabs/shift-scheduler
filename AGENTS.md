@@ -40,7 +40,7 @@ Run only what is relevant to files you changed. All commands are available as `j
 
 Notes:
 
-- `pyproject.toml` defines Black style (line length 100, `py313` target) and Ruff lint rules.
+- `pyproject.toml` defines Black style (line length 100, `py314` target) and Ruff lint rules.
 
 ## Backend Conventions (`backend/`)
 
@@ -117,4 +117,3 @@ Apply these when relevant:
 - Do not rotate or overwrite live cloud resources unless explicitly requested.
 - Do not destroy infrastructure as part of routine edits.
 - Do not change environment defaults (`dev`/`prod`, region, naming) without explicit request.
-
