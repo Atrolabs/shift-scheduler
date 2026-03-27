@@ -28,7 +28,7 @@ fe-format-check:
 
 # Create venv & install deps
 be-install:
-    cd backend && python -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
+    python3 -m venv .venv && source .venv/bin/activate && pip install -e ".[dev]"
 
 # Start FastAPI dev server (:8000)
 be-dev:
